@@ -5,9 +5,17 @@
         <title>Javalin realtime collaboration</title>
     </head>
     <body>
-        <h1>Open the URL in another tab to start collaborating</h1>
-        <textarea placeholder="Type something ..."></textarea>
+        <h1>CalcShare</h1>
+        <textarea id="text" placeholder="Type something ..."></textarea>
+        <button class="button"> Click </button>
         <script>
+            let input;
+            function run() {
+                input = document.querySelector("#text").value;
+                alert(input);
+            }
+            btn = document.querySelector(".button");
+            btn.addEventListener("click", run);
             window.onload = setupWebSocket;
             window.onhashchange = setupWebSocket;
 
