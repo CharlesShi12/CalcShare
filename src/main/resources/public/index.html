@@ -2,25 +2,50 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Javalin realtime collaboration</title>
+        <title>Calc Share</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     </head>
     <body>
-        <h1>Open the URL in another tab to start collaborating</h1>
-        <textarea id="text" placeholder="Type something ..."></textarea>
-        <button class="button"> Click </button>
+        <h1>CalcShare</h1>
+        <textarea id="text" placeholder="Type your calulations here..."></textarea>
+        <button type="button" id="button" class="btn btn-dark btn-lg btn-block">Submit</button>
+        <div id="calculations"></div>
         <script>
+            let queue = [];
             let input;
             function run() {
                 input = document.querySelector("#text").value;
-                alert(input);
             }
-            btn = document.querySelector(".button");
+            btn = document.querySelector("#button");
             btn.addEventListener("click", run);
+            $('.btn').click(function(){
+                let calc = document.querySelector("#text").value;
+                calc = calc.replace("+", "%2B");
+                calc = calc.replace("-", "%2D");
+                calc = calc.replace("/", "%2F");
+                calc = calc.replace("*", "%2A");
+                const Url = 'http://api.mathjs.org/v4/?expr=' + calc;
+                $.getJSON(Url, function(result){
+                    if(queue.length === 5) {
+                        queue.shift();
+                        queue.push(input + "=" + result);
+                    }else{
+                        queue.push(input + "=" + result);
+                    }
+                    var app = document.querySelector('#calculations');
+                    app.innerHTML = '<ul>' + queue.map(function (queue) {
+                        return '<li>' + queue + '</li>';
+                    }).reverse().join('') + '</ul>';
+                })
+
+
+            });
             window.onload = setupWebSocket;
             window.onhashchange = setupWebSocket;
 
             if (!window.location.hash) {
-                const newDocumentId = Date.now().toString(36); // this should be more random
+                const newDocumentId = Date.now().toString(36);
                 window.history.pushState(null, null, "#" + newDocumentId);
             }
 
@@ -38,7 +63,7 @@
                         textArea.setSelectionRange(selection.start, selection.end);
                     } else if (!startsSame && endsSame) {
                         textArea.setSelectionRange(selection.start + offset, selection.end + offset);
-                    } else { // this is what google docs does...
+                    } else {
                         textArea.setSelectionRange(selection.start, selection.end + offset);
                     }
                 };
@@ -50,10 +75,6 @@
                 box-sizing: border-box;
                 font-family: Georgia, serif;
                 color: rgba(0, 0, 0, 0.75);
-            }
-
-            html {
-                background: #f5f5f5;
             }
 
             body {
@@ -72,7 +93,7 @@
                 box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.2);
                 width: 100%;
                 border: 0;
-                min-height: 80vh;
+                min-height: 25vh;
                 outline: 0;
                 padding: 20px;
                 font-size: 18px;
