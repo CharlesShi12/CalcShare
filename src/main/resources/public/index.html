@@ -1,117 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Calc Share</title>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-    </head>
-    <body>
-        <h1>CalcShare</h1>
-<<<<<<< HEAD
+<head>
+    <meta charset="UTF-8">
+    <title>Calc Share</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+</head>
+<body>
+<h1>CalcShare</h1>
+<div class="row">
+    <div class="col-sm-8">
         <textarea id="text" placeholder="Type your calulations here..."></textarea>
-        <button type="button" id="button" class="btn btn-dark btn-lg btn-block">Submit</button>
+        <button type="button" id="button" class="btn btn-dark btn-lg btn-block">Compute</button>
+    </div>
+    <div class="col-sm-4">
         <div id="calculations"></div>
-        <script>
-            let queue = [];
-            let input;
-            function run() {
-                input = document.querySelector("#text").value;
+        <button id="clear" class="btn btn-light btn-lg btn-block">Clear All</button>
+    </div>
+</div>
+<script>
+    let queue = [];
+    let input;
+    function run() {
+        input = document.querySelector("#text").value;
+    }
+    function clear(){
+        queue=[];
+        document.getElementById("calculations").innerHTML = "";
+    }
+    btn = document.querySelector("#button");
+    btn.addEventListener("click", run);
+    btnClear = document.querySelector("#clear");
+    btnClear.addEventListener("click", clear);
+    $('.btn').click(function(){
+        let calc = document.querySelector("#text").value;
+        calc = calc.split("+").join("%2B");
+        calc = calc.split("-").join("%2D");
+        calc = calc.split("/").join("%2F");
+        calc = calc.split("*").join("%2A");
+        const Url = 'http://api.mathjs.org/v4/?expr=' + calc;
+        $.getJSON(Url, function(result){
+            if(queue.length === 10) {
+                queue.shift();
+                queue.push(input + "=" + result);
+            }else{
+                queue.push(input + "=" + result);
             }
-            btn = document.querySelector("#button");
-            btn.addEventListener("click", run);
-            $('.btn').click(function(){
-                let calc = document.querySelector("#text").value;
-                calc = calc.replace("+", "%2B");
-                calc = calc.replace("-", "%2D");
-                calc = calc.replace("/", "%2F");
-                calc = calc.replace("*", "%2A");
-                const Url = 'http://api.mathjs.org/v4/?expr=' + calc;
-                $.getJSON(Url, function(result){
-                    if(queue.length === 5) {
-                        queue.shift();
-                        queue.push(input + "=" + result);
-                    }else{
-                        queue.push(input + "=" + result);
-                    }
-                    var app = document.querySelector('#calculations');
-                    app.innerHTML = '<ul>' + queue.map(function (queue) {
-                        return '<li>' + queue + '</li>';
-                    }).reverse().join('') + '</ul>';
-                })
+            var app = document.querySelector('#calculations');
+            app.innerHTML = '<ul class="list-group">' + queue.map(function (queue) {
+                return '<li class="list-group-item">' + queue + '</li>';
+            }).reverse().join('') + '</ul>';
+            document.querySelector("#text").value = null;
+        })
 
 
-            });
-=======
-        <textarea id="text" placeholder="Type something ..."></textarea>
-        <button class="button"> Click </button>
-        <script>
-            let input;
-            function run() {
-                input = document.querySelector("#text").value;
-                alert(input);
-            }
-            btn = document.querySelector(".button");
-            btn.addEventListener("click", run);
->>>>>>> bedf9988603baebf2460f1716f21d05eda4fb0e5
-            window.onload = setupWebSocket;
-            window.onhashchange = setupWebSocket;
+    });
+    window.onload = setupWebSocket;
+    window.onhashchange = setupWebSocket;
 
-            if (!window.location.hash) {
-                const newDocumentId = Date.now().toString(36);
-                window.history.pushState(null, null, "#" + newDocumentId);
-            }
+    if (!window.location.hash) {
+        const newDocumentId = Date.now().toString(36);
+        window.history.pushState(null, null, "#" + newDocumentId);
+    }
 
-            function setupWebSocket() {
-                const textArea = document.querySelector("textarea");
-                const ws = new WebSocket(`ws://localhost:7070/docs/${window.location.hash.substr(1)}`);
-                textArea.onkeyup = () => ws.send(textArea.value);
-                ws.onmessage = msg => {
-                    const offset = msg.data.length - textArea.value.length;
-                    const selection = {start: textArea.selectionStart, end: textArea.selectionEnd};
-                    const startsSame = msg.data.startsWith(textArea.value.substring(0, selection.end));
-                    const endsSame = msg.data.endsWith(textArea.value.substring(selection.start));
-                    textArea.value = msg.data;
-                    if (startsSame && !endsSame) {
-                        textArea.setSelectionRange(selection.start, selection.end);
-                    } else if (!startsSame && endsSame) {
-                        textArea.setSelectionRange(selection.start + offset, selection.end + offset);
-                    } else {
-                        textArea.setSelectionRange(selection.start, selection.end + offset);
-                    }
-                };
-                ws.onclose = setupWebSocket; // should reconnect if connection is closed
+    function setupWebSocket() {
+        const textArea = document.querySelector("textarea");
+        const ws = new WebSocket(`ws://localhost:7070/docs/${window.location.hash.substr(1)}`);
+        textArea.onkeyup = () => ws.send(textArea.value);
+        ws.onmessage = msg => {
+            const offset = msg.data.length - textArea.value.length;
+            const selection = {start: textArea.selectionStart, end: textArea.selectionEnd};
+            const startsSame = msg.data.startsWith(textArea.value.substring(0, selection.end));
+            const endsSame = msg.data.endsWith(textArea.value.substring(selection.start));
+            textArea.value = msg.data;
+            if (startsSame && !endsSame) {
+                textArea.setSelectionRange(selection.start, selection.end);
+            } else if (!startsSame && endsSame) {
+                textArea.setSelectionRange(selection.start + offset, selection.end + offset);
+            } else {
+                textArea.setSelectionRange(selection.start, selection.end + offset);
             }
-        </script>
-        <style>
-            * {
-                box-sizing: border-box;
-                font-family: Georgia, serif;
-                color: rgba(0, 0, 0, 0.75);
-            }
+        };
+        ws.onclose = setupWebSocket; // should reconnect if connection is closed
+    }
+</script>
+<style>
+    * {
+        box-sizing: border-box;
+        font-family: Georgia, serif;
+        color: rgba(0, 0, 0, 0.75);
+    }
 
-            body {
-                max-width: 800px;
-                margin: 0 auto;
-            }
+    body {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
 
-            h1 {
-                font-size: 24px;
-                font-weight: 400;
-                margin: 30px 0;
-                text-align: center;
-            }
+    h1 {
+        font-size: 24px;
+        font-weight: 400;
+        margin: 30px 0;
+        text-align: center;
+    }
 
-            textarea {
-                box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.2);
-                width: 100%;
-                border: 0;
-                min-height: 25vh;
-                outline: 0;
-                padding: 20px;
-                font-size: 18px;
-                resize: none;
-            }
-        </style>
-    </body>
+    textarea {
+        box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        border: 0;
+        min-height: 25vh;
+        outline: 0;
+        padding: 20px;
+        font-size: 18px;
+        resize: none;
+    }
+</style>
+</body>
 </html>
