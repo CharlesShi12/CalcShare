@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<<<<<<< HEAD
 <head>
     <meta charset="UTF-8">
     <title>Calc Share</title>
@@ -10,6 +11,16 @@
 <h1>CalcShare</h1>
 <div class="row">
     <div class="col-sm-8">
+=======
+    <head>
+        <meta charset="UTF-8">
+        <title>Calc Share</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    </head>
+    <body>
+        <h1>CalcShare</h1>
+>>>>>>> 4ddb8e9b557195006995e2bf16d3d64c3dca3f50
         <textarea id="text" placeholder="Type your calulations here..."></textarea>
         <button type="button" id="button" class="btn btn-dark btn-lg btn-block">Compute</button>
     </div>
@@ -52,9 +63,18 @@
             }).reverse().join('') + '</ul>';
             document.querySelector("#text").value = null;
         })
+
+
+<<<<<<< HEAD
     });
     window.onload = setupWebSocket;
     window.onhashchange = setupWebSocket;
+=======
+            });
+            window.onload = setupWebSocket;
+            window.onhashchange = setupWebSocket;
+>>>>>>> 4ddb8e9b557195006995e2bf16d3d64c3dca3f50
+
     if (!window.location.hash) {
         const newDocumentId = Date.now().toString(36);
         window.history.pushState(null, null, "#" + newDocumentId);
