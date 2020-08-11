@@ -31,7 +31,9 @@ Run this command in your terminal:
 ```
 git clone https://github.com/CharlesShi12/CalcShare.git
 ```
-Import the folder as a project into your respective IDE and run the Main.kt file. 
+Import the folder as a project into your respective IDE. 
+Don't forget to chose Maven as your external model as you are importing this project. 
+Navigate to the Main.kt file and run it. 
 
 ## License
 MIT © Charles Shi
