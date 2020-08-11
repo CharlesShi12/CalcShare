@@ -8,8 +8,14 @@ There are many text editors that allow for real-time collaboration like Google D
 ![alt text](https://github.com/CharlesShi12/CalcShare/blob/master/demo/Screen%20Shot%202020-08-11%20at%202.33.20%20PM.png)
 
 ## Tech/Framework used
+Built with 
+* JavaScript
+* HTML
+* CSS
+* Javelin 
 
 ## Features
+
 
 ## Installations
 
