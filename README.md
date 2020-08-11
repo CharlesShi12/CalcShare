@@ -5,7 +5,9 @@ Calc Share is a calculator that allows for real-time collaboration between users
 There are many text editors that allow for real-time collaboration like Google Docs, however, there aren't many calculators that are able to do the same thing. Calc Share was built because me and many of my friends had a tough performing tedious calculations with partners during Physics or other STEM classes. Many of the times I would have to redo my partner's side of the calculations because I was worried that my partner accidently put an extra digit in the equations. For instance, 5X5=25, however, adding an extra 5 to the equation yields 275 (5X55=275), two totally different numbers, but one subtle change in the equations. Therefore, Share Calc was created to avoid situations like this. 
 
 ## Screenshots
+![alt text](https://github.com/CharlesShi12/CalcShare/blob/master/demo/Screen%20Shot%202020-08-11%20at%202.33.20%20PM.png)
 ![alt text](https://github.com/CharlesShi12/CalcShare/blob/master/demo/Screen%20Shot%202020-08-11%20at%202.33.36%20PM.png)
+
 ## Tech/Framework used
 
 ## Features
