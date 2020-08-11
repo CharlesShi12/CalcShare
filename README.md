@@ -15,11 +15,23 @@ Built with
 * Javelin 
 
 ## Features
+* Real-time collaboration
+* Submit button
+* Unique IDs for each calculator room
+* Saves the past 10 calculations
+* Clear all calculations button
+* Helpful documentation
 
+## API Reference
+Math API: http://api.mathjs.org/
 
 ## Installations
-
-## Code Example
+Run this command in your terminal: 
+```
+git clone https://github.com/CharlesShi12/CalcShare.git
+```
+Import the folder into your respective IDE and run the Main.kt file. 
 
 ## License
+MIT © Charles Shi
 
