@@ -30,7 +30,7 @@ Run this command in your terminal:
 ```
 git clone https://github.com/CharlesShi12/CalcShare.git
 ```
-Import the folder into your respective IDE and run the Main.kt file. 
+Import the folder as a project into your respective IDE and run the Main.kt file. 
 
 ## License
 MIT © Charles Shi
