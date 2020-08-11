@@ -41,7 +41,7 @@ if (!window.location.hash) {
 
 function setupWebSocket() {
     const textArea = document.querySelector("textarea");
-    const ws = new WebSocket(`ws://localhost:7070/docs/${window.location.hash.substr(1)}`);
+    const ws = new WebSocket(`ws://localhost:8000/docs/${window.location.hash.substr(1)}`);
     textArea.onkeyup = () => ws.send(textArea.value);
     ws.onmessage = msg => {
         const offset = msg.data.length - textArea.value.length;
