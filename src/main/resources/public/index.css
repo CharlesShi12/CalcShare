@@ -1,0 +1,28 @@
+* {
+    box-sizing: border-box;
+    font-family: Georgia, serif;
+    color: rgba(0, 0, 0, 0.75);
+}
+
+body {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: 400;
+    margin: 30px 0;
+    text-align: center;
+}
+
+textarea {
+    box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    border: 0;
+    min-height: 25vh;
+    outline: 0;
+    padding: 20px;
+    font-size: 18px;
+    resize: none;
+}
