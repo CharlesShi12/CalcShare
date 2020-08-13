@@ -1,37 +1,6 @@
 let queue = [];
-let input;
-function run() {
-    input = document.querySelector("#text").value;
-}
-function clear(){
-    queue=[];
-    document.getElementById("calculations").innerHTML = "";
-}
-btn = document.querySelector("#button");
-btn.addEventListener("click", run);
-btnClear = document.querySelector("#clear");
-btnClear.addEventListener("click", clear);
-$('.btn').click(function(){
-    let calc = document.querySelector("#text").value;
-    calc = calc.split("+").join("%2B");
-    calc = calc.split("-").join("%2D");
-    calc = calc.split("/").join("%2F");
-    calc = calc.split("*").join("%2A");
-    const Url = 'http://api.mathjs.org/v4/?expr=' + calc;
-    $.getJSON(Url, function(result){
-        if(queue.length === 10) {
-            queue.shift();
-            queue.push(input + "=" + result);
-        }else{
-            queue.push(input + "=" + result);
-        }
-        var app = document.querySelector('#calculations');
-        app.innerHTML = '<ul class="list-group">' + queue.map(function (queue) {
-            return '<li class="list-group-item">' + queue + '</li>';
-        }).reverse().join('') + '</ul>';
-        document.querySelector("#text").value = null;
-    })
-});
+let calc = [];
+
 window.onload = setupWebSocket;
 window.onhashchange = setupWebSocket;
 if (!window.location.hash) {
@@ -43,12 +12,49 @@ function setupWebSocket() {
     const textArea = document.querySelector("textarea");
     const ws = new WebSocket(`ws://localhost:8000/docs/${window.location.hash.substr(1)}`);
     textArea.onkeyup = () => ws.send(textArea.value);
+    $('.btn').click(function(){
+        ws.send(textArea.value + "charles");
+        location.reload();
+    });
+    let j = 0;
     ws.onmessage = msg => {
         const offset = msg.data.length - textArea.value.length;
         const selection = {start: textArea.selectionStart, end: textArea.selectionEnd};
         const startsSame = msg.data.startsWith(textArea.value.substring(0, selection.end));
         const endsSame = msg.data.endsWith(textArea.value.substring(selection.start));
-        textArea.value = msg.data;
+        if(msg.data.includes("charles")){
+            calc.push(msg.data);
+            calc = calc[calc.length - 1].split('charles');
+            if(j % 2 === 1) {
+                queue=[];
+                document.getElementById("calculations").innerHTML = "";
+                for(var i = 0; i < calc.length - 1; i++){
+                    let calcs = calc[i];
+                    let equations = calc[i];
+                    calcs = calcs.split("+").join("%2B");
+                    calcs = calcs.split("-").join("%2D");
+                    calcs = calcs.split("/").join("%2F");
+                    calcs = calcs.split("*").join("%2A");
+                    const Url = 'http://api.mathjs.org/v4/?expr=' + calcs;
+                    $.getJSON(Url, function (result) {
+                        if (queue.length === 300) {
+                            queue.shift();
+                            queue.push(equations + "=" + result);
+                        } else {
+                            queue.push(equations + "=" + result);
+                        }
+                        var app = document.querySelector('#calculations');
+                        app.innerHTML = '<ul class="list-group">' + queue.map(function (queue) {
+                            return '<li class="list-group-item">' + queue + '</li>';
+                        }).reverse().join('') + '</ul>';
+                        document.querySelector("#text").value = null;
+                    })
+                }
+            }
+            textArea.value = "";
+        } else {
+            textArea.value = msg.data;
+        }
         if (startsSame && !endsSame) {
             textArea.setSelectionRange(selection.start, selection.end);
         } else if (!startsSame && endsSame) {
@@ -56,6 +62,7 @@ function setupWebSocket() {
         } else {
             textArea.setSelectionRange(selection.start, selection.end + offset);
         }
+        j++;
     };
-    ws.onclose = setupWebSocket; // should reconnect if connection is closed
+    ws.onclose = setupWebSocket;
 }
