@@ -7,7 +7,7 @@ There are many text editors that allow for real-time collaboration like Google D
 ## Demonstration
 ![GIF #1](https://media.giphy.com/media/PnObVbcaNdaHuaBBCy/giphy.gif)
 
-Detailed demonstration here: https://youtu.be/xKgpdfpYl8M.
+Detailed demonstration here: https://youtu.be/nkJSL4uu6_c.
 
 ## Tech/Framework used
 Built with 
@@ -22,6 +22,7 @@ Built with
 * Submit button
 * Unique IDs for each calculator room
 * Saves the past calculations for each room and its users
+* Calculates basical operations, trigonometry, square root, logarithms, etc
 * Helpful documentation
 
 ## API Reference
