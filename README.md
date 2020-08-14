@@ -14,7 +14,8 @@ Built with
 * JavaScript
 * HTML
 * CSS
-* Javelin 
+* Javalin 
+* Kotlin
 
 ## Features
 * Real-time collaboration
