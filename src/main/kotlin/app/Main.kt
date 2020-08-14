@@ -48,11 +48,4 @@ fun main() {
 
 }
 
-private fun createHtmlMessageFromSender(sender: String, message: String): String {
-    return article(
-            b("$sender says:"),
-            span(attrs(".timestamp"), SimpleDateFormat("HH:mm:ss").format(Date())),
-            p(message)
-    ).render()
-}
 val WsContext.docId: String get() = this.pathParam("doc-id")
