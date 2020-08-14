@@ -1,48 +1,50 @@
 let queue = [];
 let calc = [];
 
+// setting up websocket
 window.onload = setupWebSocket;
 window.onhashchange = setupWebSocket;
 if (!window.location.hash) {
-    const newDocumentId = Date.now().toString(36);
+    // generating random room ids based off the date
+    const newDocumentId = Date.now().toString(30);
     window.history.pushState(null, null, "#" + newDocumentId);
 }
-
 function setupWebSocket() {
     const textArea = document.querySelector("textarea");
     const ws = new WebSocket(`ws://localhost:8000/docs/${window.location.hash.substr(1)}`);
+    $('#view').click(function(){
+        location.reload();
+    });
+    // sending values to websocket every time there is a keystroke
     textArea.onkeyup = () => ws.send(textArea.value);
     $('.btn').click(function(){
+        // sends user's equation along with a special identifier
         ws.send(textArea.value + "charles");
         location.reload();
     });
     let j = 0;
+    // sending values every time there is a keystroke
     ws.onmessage = msg => {
-        const offset = msg.data.length - textArea.value.length;
-        const selection = {start: textArea.selectionStart, end: textArea.selectionEnd};
-        const startsSame = msg.data.startsWith(textArea.value.substring(0, selection.end));
-        const endsSame = msg.data.endsWith(textArea.value.substring(selection.start));
+        // searches for special identifier to see if the user clicked submit
         if(msg.data.includes("charles")){
+            // sends all of the current and previous calculations to all of the collaborators for a specific room
             calc.push(msg.data);
             calc = calc[calc.length - 1].split('charles');
             if(j % 2 === 1) {
                 queue=[];
                 document.getElementById("calculations").innerHTML = "";
-                for(var i = 0; i < calc.length - 1; i++){
-                    let calcs = calc[i];
+                for(let i = 0; i < calc.length - 1; i++){
+                    // interacts with a RESTful API to calculate the user's equation
+                    let calculation = calc[i];
                     let equations = calc[i];
-                    calcs = calcs.split("+").join("%2B");
-                    calcs = calcs.split("-").join("%2D");
-                    calcs = calcs.split("/").join("%2F");
-                    calcs = calcs.split("*").join("%2A");
-                    const Url = 'http://api.mathjs.org/v4/?expr=' + calcs;
+                    calculation = calculation.split("+").join("%2B");
+                    calculation = calculation.split("-").join("%2D");
+                    calculation = calculation.split("/").join("%2F");
+                    calculation = calculation.split("*").join("%2A");
+                    const Url = 'http://api.mathjs.org/v4/?expr=' + calculation;
                     $.getJSON(Url, function (result) {
-                        if (queue.length === 300) {
-                            queue.shift();
-                            queue.push(equations + "=" + result);
-                        } else {
-                            queue.push(equations + "=" + result);
-                        }
+                        queue.push(equations + "=" + result);
+                        // outputs calculations in a user-friendly format
                         var app = document.querySelector('#calculations');
                         app.innerHTML = '<ul class="list-group">' + queue.map(function (queue) {
                             return '<li class="list-group-item">' + queue + '</li>';
@@ -55,14 +57,8 @@ function setupWebSocket() {
         } else {
             textArea.value = msg.data;
         }
-        if (startsSame && !endsSame) {
-            textArea.setSelectionRange(selection.start, selection.end);
-        } else if (!startsSame && endsSame) {
-            textArea.setSelectionRange(selection.start + offset, selection.end + offset);
-        } else {
-            textArea.setSelectionRange(selection.start, selection.end + offset);
-        }
         j++;
     };
+    // will reconnect websocket if tab is closed
     ws.onclose = setupWebSocket;
 }
