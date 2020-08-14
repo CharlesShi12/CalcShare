@@ -20,7 +20,7 @@ Built with
 * Real-time collaboration
 * Submit button
 * Unique IDs for each calculator room
-* Saves the past calculations on all ends of the user
+* Saves the past calculations for each room and its users
 * Helpful documentation
 
 ## API Reference
