@@ -7,7 +7,7 @@ There are many text editors that allow for real-time collaboration like Google D
 ## Demonstration
 ![GIF #1](https://i.gyazo.com/42d359f9a0e0c5ebf709a87df8539378.gif)
 
-Detailed demonstration here: https://youtu.be/nkJSL4uu6_c.
+Detailed demonstration here: https://youtu.be/ORT1L7_pC8c.
 
 ## Tech/Framework used
 Built with 
